@@ -30,11 +30,12 @@ jobs:
       - name: Build binaries
         run: |
           # Build for multiple platforms
-          GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o dist/manifold-k8s-linux-amd64
-          GOOS=linux GOARCH=arm64 go build -ldflags="-s -w" -o dist/manifold-k8s-linux-arm64
-          GOOS=darwin GOARCH=amd64 go build -ldflags="-s -w" -o dist/manifold-k8s-darwin-amd64
-          GOOS=darwin GOARCH=arm64 go build -ldflags="-s -w" -o dist/manifold-k8s-darwin-arm64
-          GOOS=windows GOARCH=amd64 go build -ldflags="-s -w" -o dist/manifold-k8s-windows-amd64.exe
+          mkdir -p dist
+          GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o dist/swk-linux-amd64 ./cmd/swk
+          GOOS=linux GOARCH=arm64 go build -ldflags="-s -w" -o dist/swk-linux-arm64 ./cmd/swk
+          GOOS=darwin GOARCH=amd64 go build -ldflags="-s -w" -o dist/swk-darwin-amd64 ./cmd/swk
+          GOOS=darwin GOARCH=arm64 go build -ldflags="-s -w" -o dist/swk-darwin-arm64 ./cmd/swk
+          GOOS=windows GOARCH=amd64 go build -ldflags="-s -w" -o dist/swk-windows-amd64.exe ./cmd/swk
 
       - name: Create checksums
         run: |
@@ -45,11 +46,11 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            dist/manifold-k8s-linux-amd64
-            dist/manifold-k8s-linux-arm64
-            dist/manifold-k8s-darwin-amd64
-            dist/manifold-k8s-darwin-arm64
-            dist/manifold-k8s-windows-amd64.exe
+            dist/swk-linux-amd64
+            dist/swk-linux-arm64
+            dist/swk-darwin-amd64
+            dist/swk-darwin-arm64
+            dist/swk-windows-amd64.exe
             dist/checksums.txt
           generate_release_notes: true
           draft: false

@@ -1,11 +1,12 @@
 # Binaries
 bin/
+dist/
 *.exe
 *.exe~
 *.dll
 *.so
 *.dylib
-manifold-k8s
+swk
 
 # Test artifacts
 *.test
