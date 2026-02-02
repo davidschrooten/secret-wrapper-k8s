@@ -57,12 +57,12 @@ func TestSelectEditor(t *testing.T) {
 			oldEditor := os.Getenv("EDITOR")
 			oldVisual := os.Getenv("VISUAL")
 			defer func() {
-				os.Setenv("EDITOR", oldEditor)
-				os.Setenv("VISUAL", oldVisual)
+				_ = os.Setenv("EDITOR", oldEditor)
+				_ = os.Setenv("VISUAL", oldVisual)
 			}()
 
-			os.Setenv("EDITOR", tt.editorEnv)
-			os.Setenv("VISUAL", tt.visualEnv)
+			_ = os.Setenv("EDITOR", tt.editorEnv)
+			_ = os.Setenv("VISUAL", tt.visualEnv)
 
 			got := SelectEditor(tt.flagValue)
 			if got != tt.want {
@@ -115,7 +115,7 @@ func TestLaunchEditorWithRealCommand(t *testing.T) {
 	if err := os.WriteFile(tmpFile, []byte("test"), 0644); err != nil {
 		t.Fatalf("Failed to create temp file: %v", err)
 	}
-	defer os.Remove(tmpFile)
+	defer func() { _ = os.Remove(tmpFile) }()
 
 	// Use a command that will succeed
 	err := LaunchEditor("echo", tmpFile)
@@ -143,7 +143,7 @@ func TestCommandExecution(t *testing.T) {
 	if err := os.WriteFile(tmpFile, []byte("test"), 0644); err != nil {
 		t.Fatalf("Failed to create temp file: %v", err)
 	}
-	defer os.Remove(tmpFile)
+	defer func() { _ = os.Remove(tmpFile) }()
 
 	// Use sh -c to verify the file path is passed correctly
 	err := LaunchEditor("sh", "-c", "exit 0", tmpFile)

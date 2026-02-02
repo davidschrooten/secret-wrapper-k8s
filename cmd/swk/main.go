@@ -92,13 +92,13 @@ func processSecretFile(filePath string) (string, func(), error) {
 
 	// Write decoded data to temp file
 	if _, err := tmpFile.Write(decoded); err != nil {
-		tmpFile.Close()
-		os.Remove(tmpPath)
+		_ = tmpFile.Close()
+		_ = os.Remove(tmpPath)
 		return "", nil, fmt.Errorf("failed to write temp file: %w", err)
 	}
 
 	if err := tmpFile.Close(); err != nil {
-		os.Remove(tmpPath)
+		_ = os.Remove(tmpPath)
 		return "", nil, fmt.Errorf("failed to close temp file: %w", err)
 	}
 
