@@ -104,7 +104,7 @@ func processSecretFile(filePath string) (string, func(), error) {
 
 	// Cleanup function to remove temp file
 	cleanup := func() {
-		os.Remove(tmpPath)
+		_ = os.Remove(tmpPath)
 	}
 
 	return tmpPath, cleanup, nil
