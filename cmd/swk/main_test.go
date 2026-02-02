@@ -277,7 +277,7 @@ func TestRun(t *testing.T) {
 				if err := os.WriteFile(testFile, []byte(tt.fileContent), 0644); err != nil {
 					t.Fatalf("Failed to create test file: %v", err)
 				}
-				defer os.Remove(testFile)
+				defer func() { _ = os.Remove(testFile) }()
 			}
 
 			if tt.setupEnv != nil {
