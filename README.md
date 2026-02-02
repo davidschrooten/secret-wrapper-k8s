@@ -1,5 +1,10 @@
 # secret-wrapper-k8s (swk)
 
+[![Go Version](https://img.shields.io/badge/Go-1.25.5-blue.svg)](https://golang.org/doc/go1.25)
+[![Go Report Card](https://goreportcard.com/badge/github.com/davidschrooten/secret-wrapper-k8s)](https://goreportcard.com/report/github.com/davidschrooten/secret-wrapper-k8s)
+[![Tests](https://github.com/davidschrooten/secret-wrapper-k8s/actions/workflows/test.yml/badge.svg)](https://github.com/davidschrooten/secret-wrapper-k8s/actions/workflows/test.yml)
+[![Coverage](https://img.shields.io/badge/coverage-84.1%25-brightgreen.svg)](https://github.com/davidschrooten/secret-wrapper-k8s)
+
 A CLI tool that makes editing Kubernetes Secrets easier by automatically decoding and encoding base64 values.
 
 ## The Problem

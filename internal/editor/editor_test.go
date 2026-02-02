@@ -8,11 +8,11 @@ import (
 
 func TestSelectEditor(t *testing.T) {
 	tests := []struct {
-		name           string
-		flagValue      string
-		editorEnv      string
-		visualEnv      string
-		want           string
+		name      string
+		flagValue string
+		editorEnv string
+		visualEnv string
+		want      string
 	}{
 		{
 			name:      "flag takes precedence",
@@ -74,11 +74,11 @@ func TestSelectEditor(t *testing.T) {
 
 func TestLaunchEditor(t *testing.T) {
 	tests := []struct {
-		name       string
-		editor     string
-		filePath   string
-		wantErr    bool
-		setupMock  bool
+		name      string
+		editor    string
+		filePath  string
+		wantErr   bool
+		setupMock bool
 	}{
 		{
 			name:      "successful editor launch",
@@ -110,7 +110,7 @@ func TestLaunchEditorWithRealCommand(t *testing.T) {
 	// Test with a command that exists
 	// We use 'echo' which should be available on all systems
 	tmpFile := "/tmp/swk-test-editor.yaml"
-	
+
 	// Create a temporary file
 	if err := os.WriteFile(tmpFile, []byte("test"), 0644); err != nil {
 		t.Fatalf("Failed to create temp file: %v", err)
