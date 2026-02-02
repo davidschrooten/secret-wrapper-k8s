@@ -122,7 +122,7 @@ data:
 			if err := os.WriteFile(testFile, []byte(tt.fileContent), 0644); err != nil {
 				t.Fatalf("Failed to create test file: %v", err)
 			}
-			defer os.Remove(testFile)
+			defer func() { _ = os.Remove(testFile) }()
 
 			// Process the file
 			tmpFile, cleanup, err := processSecretFile(testFile)
@@ -211,12 +211,12 @@ data:
 			if err := os.WriteFile(originalFile, []byte(originalData), 0644); err != nil {
 				t.Fatalf("Failed to create original file: %v", err)
 			}
-			defer os.Remove(originalFile)
+			defer func() { _ = os.Remove(originalFile) }()
 
 			if err := os.WriteFile(tmpFile, []byte(tt.editedData), 0644); err != nil {
 				t.Fatalf("Failed to create temp file: %v", err)
 			}
-			defer os.Remove(tmpFile)
+			defer func() { _ = os.Remove(tmpFile) }()
 
 			err := finalizeSecretFile(originalFile, tmpFile)
 			if (err != nil) != tt.wantErr {
