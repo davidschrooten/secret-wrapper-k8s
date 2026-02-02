@@ -8,11 +8,11 @@ import (
 
 func TestParseArgs(t *testing.T) {
 	tests := []struct {
-		name          string
-		args          []string
-		wantEditor    string
-		wantFilePath  string
-		wantErr       bool
+		name         string
+		args         []string
+		wantEditor   string
+		wantFilePath string
+		wantErr      bool
 	}{
 		{
 			name:         "with editor flag and file",
@@ -94,9 +94,9 @@ data:
 `
 
 	tests := []struct {
-		name         string
-		fileContent  string
-		wantErr      bool
+		name        string
+		fileContent string
+		wantErr     bool
 	}{
 		{
 			name:        "valid secret file",
@@ -177,9 +177,9 @@ data:
 `
 
 	tests := []struct {
-		name         string
-		editedData   string
-		wantErr      bool
+		name       string
+		editedData string
+		wantErr    bool
 	}{
 		{
 			name:       "valid edited secret",

@@ -28,7 +28,7 @@ func SelectEditor(flagValue string) string {
 // The function waits for the editor to exit and returns any error
 func LaunchEditor(editor string, args ...string) error {
 	cmd := exec.Command(editor, args...)
-	
+
 	// Connect stdin, stdout, stderr to allow interactive editing
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout

@@ -109,7 +109,7 @@ func transformData(doc *yaml.Node, transform func(string) (string, error)) error
 	// Transform each value in the data section
 	for i := 1; i < len(dataNode.Content); i += 2 {
 		valueNode := dataNode.Content[i]
-		
+
 		// Handle scalar values
 		if valueNode.Kind == yaml.ScalarNode {
 			transformed, err := transform(valueNode.Value)

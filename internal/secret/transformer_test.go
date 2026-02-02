@@ -488,10 +488,10 @@ metadata:
 
 func TestFindField(t *testing.T) {
 	tests := []struct {
-		name     string
-		input    string
-		key      string
-		wantNil  bool
+		name    string
+		input   string
+		key     string
+		wantNil bool
 	}{
 		{
 			name: "field exists",
@@ -633,4 +633,3 @@ data:
 		t.Error("Round trip failed: expected base64 encoded password")
 	}
 }
-
