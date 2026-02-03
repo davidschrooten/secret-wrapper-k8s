@@ -345,6 +345,76 @@ func TestParseArgsEditorShorthand(t *testing.T) {
 	}
 }
 
+func TestRunWithNonSecret(t *testing.T) {
+	// Test that non-Secret resources are passed through without decode/encode
+	tmpDir := t.TempDir()
+
+	deployment := `apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: test
+  template:
+    metadata:
+      labels:
+        app: test
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+`
+
+	testFile := filepath.Join(tmpDir, "deployment.yaml")
+	if err := os.WriteFile(testFile, []byte(deployment), 0644); err != nil {
+		t.Fatalf("Failed to create test file: %v", err)
+	}
+	defer func() { _ = os.Remove(testFile) }()
+
+	// Use 'cat' as editor to verify pass-through
+	err := run([]string{"-e", "cat", testFile})
+	if err != nil {
+		t.Errorf("run() with non-Secret should succeed: %v", err)
+	}
+
+	// Verify file wasn't modified (no base64 encoding attempted)
+	content, err := os.ReadFile(testFile)
+	if err != nil {
+		t.Fatalf("Failed to read test file: %v", err)
+	}
+
+	if !contains(content, []byte("kind: Deployment")) {
+		t.Error("File should still be a Deployment")
+	}
+}
+
+func TestRunWithConfigMap(t *testing.T) {
+	tmpDir := t.TempDir()
+
+	configMap := `apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: test-config
+data:
+  key: value
+`
+
+	testFile := filepath.Join(tmpDir, "configmap.yaml")
+	if err := os.WriteFile(testFile, []byte(configMap), 0644); err != nil {
+		t.Fatalf("Failed to create test file: %v", err)
+	}
+	defer func() { _ = os.Remove(testFile) }()
+
+	// Use 'cat' as editor
+	err := run([]string{"-e", "cat", testFile})
+	if err != nil {
+		t.Errorf("run() with ConfigMap should succeed: %v", err)
+	}
+}
+
 // Helper function
 func contains(data []byte, substr []byte) bool {
 	for i := 0; i <= len(data)-len(substr); i++ {
