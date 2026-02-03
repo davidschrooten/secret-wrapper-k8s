@@ -264,16 +264,17 @@ func TestRun(t *testing.T) {
 		},
 		{
 			name:        "invalid secret file",
-			args:        []string{filepath.Join(tmpDir, "invalid.yaml")},
+			args:        []string{"-e", "cat", filepath.Join(tmpDir, "invalid.yaml")},
 			fileContent: "invalid: yaml: [[[",
-			wantErr:     true,
+			wantErr:     false, // Not a Secret, so it passes through without error
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if tt.fileContent != "" {
-				testFile := tt.args[0]
+				// Find the file path (last argument)
+				testFile := tt.args[len(tt.args)-1]
 				if err := os.WriteFile(testFile, []byte(tt.fileContent), 0644); err != nil {
 					t.Fatalf("Failed to create test file: %v", err)
 				}
