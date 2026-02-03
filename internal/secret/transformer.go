@@ -7,6 +7,30 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+// IsSecret checks if the given YAML is a Kubernetes Secret resource
+func IsSecret(input []byte) bool {
+	if len(input) == 0 {
+		return false
+	}
+
+	var doc yaml.Node
+	if err := yaml.Unmarshal(input, &doc); err != nil {
+		return false
+	}
+
+	if doc.Kind != yaml.DocumentNode || len(doc.Content) == 0 {
+		return false
+	}
+
+	root := doc.Content[0]
+	if root.Kind != yaml.MappingNode {
+		return false
+	}
+
+	kind := findField(root, "kind")
+	return kind != nil && kind.Value == "Secret"
+}
+
 // DecodeSecretData takes a Kubernetes Secret YAML and decodes all base64 values in the data section
 func DecodeSecretData(input []byte) ([]byte, error) {
 	if len(input) == 0 {

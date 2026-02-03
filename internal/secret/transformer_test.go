@@ -7,6 +7,74 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+func TestIsSecret(t *testing.T) {
+	tests := []struct {
+		name  string
+		input string
+		want  bool
+	}{
+		{
+			name: "valid secret",
+			input: `apiVersion: v1
+kind: Secret
+metadata:
+  name: test
+type: Opaque`,
+			want: true,
+		},
+		{
+			name: "deployment",
+			input: `apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test`,
+			want: false,
+		},
+		{
+			name: "configmap",
+			input: `apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: test`,
+			want: false,
+		},
+		{
+			name: "ingress",
+			input: `apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: test`,
+			want: false,
+		},
+		{
+			name:  "invalid yaml",
+			input: `invalid: yaml: [[[`,
+			want:  false,
+		},
+		{
+			name:  "empty",
+			input: "",
+			want:  false,
+		},
+		{
+			name: "no kind field",
+			input: `apiVersion: v1
+metadata:
+  name: test`,
+			want: false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := IsSecret([]byte(tt.input))
+			if got != tt.want {
+				t.Errorf("IsSecret() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func TestDecodeSecretData(t *testing.T) {
 	tests := []struct {
 		name    string

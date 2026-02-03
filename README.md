@@ -97,14 +97,20 @@ You can set `swk` as your default Kubernetes editor:
 # In your ~/.bashrc or ~/.zshrc
 export KUBE_EDITOR="swk -e vim"
 
-# Now you can just run:
-kubectl edit secret my-secret
+# Now you can edit ANY resource type:
+kubectl edit secret my-secret         # Decodes base64 automatically
+kubectl edit deployment my-app        # Pass-through (no transformation)
+kubectl edit ingress my-ingress       # Pass-through (no transformation)
+kubectl edit configmap my-config      # Pass-through (no transformation)
 ```
 
 ## How It Works
 
+`swk` intelligently detects whether you're editing a Secret or any other Kubernetes resource:
+
+### For Secrets:
 1. kubectl calls `swk` with a temporary YAML file path
-2. `swk` reads the file and validates it's a Kubernetes Secret
+2. `swk` reads the file and detects it's a Kubernetes Secret
 3. All values in the `data` section are decoded from base64 to plaintext
 4. The decoded YAML is written to a new temporary file
 5. Your chosen editor opens the temporary file
@@ -113,7 +119,15 @@ kubectl edit secret my-secret
 8. The encoded YAML is written back to kubectl's original temp file
 9. kubectl applies the changes
 
-**Note:** `swk` only processes the `data` section. The `stringData` section (if present) is left as-is, since it's already plaintext.
+### For Other Resources (Deployments, Ingress, ConfigMaps, etc.):
+1. `swk` detects it's not a Secret
+2. It passes the file directly to your editor without any transformation
+3. You edit normally and save
+4. kubectl applies the changes
+
+**Note:** 
+- `swk` only processes the `data` section of Secrets. The `stringData` section (if present) is left as-is, since it's already plaintext.
+- You can safely set `export KUBE_EDITOR="swk -e vim"` and use it for editing any Kubernetes resource, not just Secrets!
 
 ## Development
 

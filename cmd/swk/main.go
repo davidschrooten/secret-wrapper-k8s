@@ -23,7 +23,23 @@ func run(args []string) error {
 		return err
 	}
 
-	// Process the secret file (decode base64)
+	// Read the file to check if it's a Secret
+	data, err := os.ReadFile(filePath)
+	if err != nil {
+		return fmt.Errorf("failed to read file: %w", err)
+	}
+
+	// Check if this is a Kubernetes Secret
+	if !secret.IsSecret(data) {
+		// Not a Secret - just pass through to editor
+		editorCmd := editor.SelectEditor(editorFlag)
+		if err := editor.LaunchEditor(editorCmd, filePath); err != nil {
+			return fmt.Errorf("editor failed: %w", err)
+		}
+		return nil
+	}
+
+	// It's a Secret - process with decode/encode workflow
 	tmpFile, cleanup, err := processSecretFile(filePath)
 	if err != nil {
 		return fmt.Errorf("failed to process secret file: %w", err)
