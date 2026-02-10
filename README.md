@@ -37,8 +37,11 @@ This is tedious and error-prone.
 git clone https://github.com/davidschrooten/secret-wrapper-k8s.git
 cd secret-wrapper-k8s
 
+# Enable nix flake (or install go)
+direnv allow
+
 # Build and install
-make install
+sudo make install
 
 # Or specify a custom installation path
 make install INSTALL_PATH=$HOME/.local/bin
